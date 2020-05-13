@@ -127,15 +127,15 @@ function every(arr, fn) {
     return new Error("Должна быть функция!");
   }
   for (let i = 0; i < arr.length; i++) {
-    if (fn(arr[i], i, arr)) {
-      return true;
+    if (!fn(arr[i])) {
+      return false;
     }
   }
-  return false;
+  return true;
 }
 
 console.log(
-  every([1, 2, 3], function (el) {
-    return el > 5;
+  every([1, 2, 5], function (el) {
+    return el < 5;
   })
 );

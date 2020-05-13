@@ -1,4 +1,3 @@
-
 // function getThis() {
 //   console.log(this);
 // }
@@ -118,17 +117,16 @@ const item = {
   amount: 50,
 };
 
-item.getPriceAll = product.getPriceAll;
-
-console.log(item.getPriceAll());
+console.log(product.getPriceAll.call(item));
 
 // 7. Даны объект и функция:
 console.clear();
 
-let sizes = { width: 5, height: 10 },
-  getSquare = function () {
-    return this.width * this.height;
-  };
+let sizes = { width: 5, height: 10 };
+
+getSquare = function () {
+  return this.width * this.height;
+};
 console.log(getSquare.call(sizes));
 
 // Не изменяя функцию или объект, получить результат функции
