@@ -106,8 +106,6 @@ const tasks = [
   };
   //END
 
-  let lastSelectedTheme = "default";
-
   // START Elements UI
 
   const listContainer = document.querySelector(
@@ -117,8 +115,9 @@ const tasks = [
   const inputTitle = form.elements["title"];
   const inputBody = form.elements["body"];
   const themeSelect = document.getElementById("themeSelect");
+  let lastSelectedTheme = localStorage.getItem("app_theme") || "default";
   // END Elements UI
-
+  setTheme(lastSelectedTheme);
   renderOfTasks(objOfTasks);
 
   //***START Events ***
@@ -223,12 +222,10 @@ const tasks = [
     const isConfirmed = confirm(
       `Вы действительно хлтите изменить тему на ${selectedTheme} ?`
     );
-    if (!isConfirmed) {
-      themeSelect.value = lastSelectedTheme;
-      return;
-    }
+    if (!isConfirmed) return;
     setTheme(selectedTheme);
     lastSelectedTheme = themeSelect.value;
+    localStorage.setItem("app_theme", selectedTheme);
   }
 
   function setTheme(name) {
@@ -236,5 +233,6 @@ const tasks = [
     Object.entries(selectetThemeObj).forEach(([key, value]) => {
       document.documentElement.style.setProperty(key, value);
     });
+    themeSelect.value = name;
   }
 })(tasks);
