@@ -3,18 +3,26 @@
 const btn = document.getElementById("btn");
 const container = document.querySelector(".container");
 
+let responseB;
+
 function getUsers(cb) {
   const xhr = new XMLHttpRequest();
   xhr.open("GET", "https://jsonplaceholder.typicode.com/users");
   xhr.send();
   xhr.addEventListener("load", (e) => {
     const response = JSON.parse(xhr.response);
+    responseB = true;
     cb(response);
   });
 }
 
 btn.addEventListener("click", (e) => {
   getUsers(renderUserForHtml);
+});
+
+container.addEventListener("click", ({ target }) => {
+  const cardTitle = target.classList.contains("card-title") ? target : null;
+  showAddress(cardTitle, target);
 });
 
 function renderUserForHtml(response) {
@@ -37,12 +45,16 @@ function renderUserForHtml(response) {
 
     const cardBody = document.createElement("div");
     cardBody.classList.add("card-body");
+    cardBody.style.position = "reletiv";
 
     const cardTitle = document.createElement("h5");
     cardTitle.classList.add("card-title");
 
     const cardText = document.createElement("p");
     cardText.classList.add("card-text");
+    cardText.classList.add("d-none");
+    cardText.style.position = "absolute";
+    cardText.style.zIndex = "1";
 
     cardBody.appendChild(cardTitle);
     cardBody.appendChild(cardText);
@@ -78,19 +90,19 @@ function renderAddressForHtml({ street, suite, city, zipcode }) {
 
   const liStreet = document.createElement("li");
   liStreet.classList.add("list-group-item", randomColor);
-  liStreet.textContent = street;
+  liStreet.textContent = `Улица: ${street}`;
 
   const liSuite = document.createElement("li");
   liSuite.classList.add("list-group-item", randomColor);
-  liSuite.textContent = suite;
+  liSuite.textContent = `Сайт: ${suite}`;
 
   const liCity = document.createElement("li");
   liCity.classList.add("list-group-item", randomColor);
-  liCity.textContent = city;
+  liCity.textContent = `Город: ${city}`;
 
   const liZipcode = document.createElement("li");
   liZipcode.classList.add("list-group-item", randomColor);
-  liZipcode.textContent = zipcode;
+  liZipcode.textContent = `ЗИП-каод: ${zipcode}`;
 
   ul.appendChild(liStreet);
   ul.appendChild(liSuite);
@@ -113,4 +125,17 @@ function randomColorClass() {
   ];
   const randomValue = Math.floor(Math.random() * arrColor.length);
   return "list-group-item-" + arrColor[randomValue];
+}
+
+function showAddress(cardTitle, target) {
+  if (cardTitle === target) {
+    const cardText = cardTitle.parentElement.querySelector(".card-text");
+    cardText.classList.toggle("d-none");
+    let displayNoneCardText = cardText.classList.contains("d-none");
+    setTimeout(() => {
+      if (!displayNoneCardText) {
+        cardText.classList.add("d-none");
+      }
+    }, 3000);
+  }
 }
