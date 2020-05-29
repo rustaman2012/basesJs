@@ -5,6 +5,7 @@ function customHttp() {
       try {
         const xhr = new XMLHttpRequest();
         xhr.open("GET", url);
+        xhr.setRequestHeader("X-Api-Key", "c48ea9ffda714a518a0e8eea64d8da9b");
         xhr.send();
         xhr.addEventListener("load", () => {
           if (Math.floor(xhr.status / 100) !== 2) {
@@ -63,14 +64,15 @@ const newsService = (function () {
   return {
     topHeadLines(country = "ua", cb) {
       http.get(
-        `${
-          proxyCors + apiUrl
-        }/top-headlines?country=${country}&apiKey=${apiKey}`,
+        `${proxyCors}${apiUrl}/top-headlines?country=${country}&apiKey=${apiKey}`,
         cb
       );
     },
     everything(query, cb) {
-      http.get(`${apiUrl}/everything?q=${query}&apiKey=${apiKey}`, cb);
+      http.get(
+        `${proxyCors}${apiUrl}/everything?q=${query}&apiKey=${apiKey}`,
+        cb
+      );
     },
   };
 })();
@@ -88,5 +90,43 @@ function loadNews() {
 
 // function on get responce from server
 function onGetResponce(err, res) {
-  console.log(res);
+  if (err) {
+    console.log(err);
+    return;
+  }
+  renderNews(res.articles);
+}
+
+// function redering news
+
+function renderNews(news) {
+  const newsContainer = document.querySelector(".news-container .row");
+  let fragment = "";
+  news.forEach((newsItem) => {
+    if (!newsItem["description"]) return;
+    const el = newsTemplate(newsItem);
+    fragment += el;
+  });
+  newsContainer.insertAdjacentHTML("afterbegin", fragment);
+}
+
+//news irem template function
+
+function newsTemplate({ urlToImage, title, url, description }) {
+  return `
+  <div class='col s12'>
+    <div class='card'>
+      <div class='card-image'>
+        <img src='${urlToImage}'>
+        <span class="card-title">${title || "none title"}</span>
+      </div>
+      <div class="card-content">
+        <p>${description || "none description"}</p>
+      </div>
+      <div class="card-action">
+        <a href="${url}">Read more</a>
+      </div>
+    </div>
+  </div>
+  `;
 }
