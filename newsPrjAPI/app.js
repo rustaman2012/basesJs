@@ -77,28 +77,49 @@ const newsService = (function () {
   };
 })();
 
+//Search Element form
+const form = document.forms["newsControls"];
+const countySelect = form.elements["country"];
+const searchInput = form.elements["search"];
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  loadNews();
+});
 //  init selects
 document.addEventListener("DOMContentLoaded", function () {
   M.AutoInit();
-  loadNews();
+  // loadNews();
 });
 
 // load news function
 function loadNews() {
-  newsService.topHeadLines("ua", onGetResponce);
+  const country = countySelect.value;
+  const searchText = searchInput.value;
+
+  if (!searchText) {
+    newsService.topHeadLines(country, onGetResponce);
+  } else {
+    newsService.everything(searchText, onGetResponce);
+  }
+  // newsService.topHeadLines("ua", onGetResponce);
 }
 
 // function on get responce from server
 function onGetResponce(err, res) {
   if (err) {
-    console.log(err);
+    showAlert(`${err}, ${res.statusText}`, "error-msg");
     return;
   }
+
+  if (!res.articles.length) {
+    showAlert("Неверный запрос!", "error-warning");
+  }
+
   renderNews(res.articles);
 }
 
 // function redering news
-
 function renderNews(news) {
   const newsContainer = document.querySelector(".news-container .row");
   let fragment = "";
@@ -110,8 +131,7 @@ function renderNews(news) {
   newsContainer.insertAdjacentHTML("afterbegin", fragment);
 }
 
-//news irem template function
-
+//n
 function newsTemplate({ urlToImage, title, url, description }) {
   return `
   <div class='col s12'>
@@ -129,4 +149,10 @@ function newsTemplate({ urlToImage, title, url, description }) {
     </div>
   </div>
   `;
+}
+
+//error
+
+function showAlert(msg, type = "success") {
+  M.toast({ html: msg, classes: type });
 }
