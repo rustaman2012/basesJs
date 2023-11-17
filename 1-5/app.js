@@ -7,7 +7,7 @@
  */
 
 /**
- * Типы данных:
+//  * Типы данных:
  * 1. Примитивные
  * - Number: 2019, 1.5, NaN, Infinity
  * - String: 'Hello', "Hello", `Hello`
@@ -17,10 +17,10 @@
  * - Symbol()
  */
 console.log(2019, 1.5);
-console.log(20 * 'asdasd');
+console.log(20 * "asdasd");
 console.log(1 / 0);
 
-console.log('Hello', "Hello", `Hello`);
+console.log("Hello", "Hello", `Hello`);
 
 console.log(true, false);
 
@@ -30,7 +30,7 @@ console.log(undefined);
 
 console.log(Symbol());
 
- /**
+/**
  * Типы данных:
  * 2. Объекты. (Reference type) Передаються по ссылке.
  * - Object: { name: 'Denis', age: 30 }
@@ -40,10 +40,10 @@ console.log(Symbol());
  *  ....
  */
 
- console.table({ name: 'Denis', age: 30 });
- console.log([1, 2, 3, 4]);
+console.table({ name: "Denis", age: 30 });
+console.log([1, 2, 3, 4]);
 
- /**
+/**
  * Особености:
  * 1. JS динамически типизированный язык
  * 2. Одна и та же переменная может хранить в себе любой тип данных
